@@ -1,0 +1,71 @@
+#!/bin/bash
+# Version 0.1 beta
+# Creating alias
+
+ttrim=/home/$USER/trim.temp
+
+# Wriring notice about this software/script
+
+echo > /home/$USER/Auto-TRIM_GTK.notice
+echo Auto-TRIM_GTK by Doctor_Titi. >>s /home/$USER/Auto-TRIM_GTK.notice
+echo This script is free and open-source. >> /home/$USER/Auto-TRIM_GTK.notice
+echo Feel free to modify and share. >> /home/$USER/Auto-TRIM_GTK.notice
+echo This program is freeware, if you paid for it you have been scammed.. >> /home/$USER/Auto-TRIM_GTK.notice
+echo >> /home/$USER/Auto-TRIM_GTK.notice
+
+# If you want to make the script slower, change "sleep x" to a value that you want (in seconds)
+
+# Staring script
+
+# Force Zenity Status message box to always be on top.
+
+sleep 1 && wmctrl -r "Progress Status" -b add,above & (
+
+# =================================================================
+
+echo "# Running TRIM command on /." ; sleep 0
+gksudo "fstrim -v /" >> $ttrim
+
+# =================================================================
+
+echo "25"
+echo "# Creating log (1/4)" ; sleep 1
+echo ================================== >> /home/$USER/autotrim.log
+
+# =================================================================
+
+echo "50"
+echo "# Creating log (2/4)" ; sleep 0
+cat $ttrim >> /home/$USER/autotrim.log
+date >> /home/$USER/autotrim.log
+
+# =================================================================
+
+echo "75"
+echo "# Creating log (3/4)" ; sleep 0
+echo ================================== >> /home/$USER/autotrim.log
+
+# =================================================================
+
+echo "99"
+echo "# Creating log (4/4)" ; sleep 1
+echo >> /home/$USER/autotrim.log
+rm /home/$USER/trim.temp
+
+
+# =================================================================
+
+echo "# All finished." ; sleep 0
+echo "100"
+notify-send "Auto-TRIM_GTK By Doctor_Titi: Task finished."
+) |
+
+zenity --progress \
+  --title="Auto-TRIM_GTK By Doctor_Titi" \
+  --text="First Task." \
+  --percentage=0 \
+  --auto-kill
+(( $? != 0 )) && zenity --error --text="Error in zenity command."
+clear
+exit 0
+#EOF
